@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace ToDoList.Objects
+namespace ToDoList.Objects //note namespace .Objects
 {
   public class Task
   {

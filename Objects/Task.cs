@@ -32,7 +32,7 @@ namespace ToDoList.Objects //note namespace .Objects
     {
       return _instances;
     }
-    public static void ClearAll()
+    public static void DeleteAll()
     {
       _instances.Clear();
     }

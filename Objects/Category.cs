@@ -37,6 +37,7 @@ namespace ToDoList.Objects
     {
       return _instances;
     }
+
     public static void Clear()
     {
       _instances.Clear();

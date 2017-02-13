@@ -1,0 +1,7 @@
+{
+  "parallelizeAssembly": false,
+  "parallelizeTestCollections": false
+}
+
+
+/* run this to avoid test order related errors. xunit will run tests in order and in series without giving false positives */

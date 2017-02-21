@@ -71,29 +71,26 @@ namespace ToDoList
             Assert.Equal(newTask, foundTask);
         }
 
+        [Fact]
+        public void Test_Delete_RemoveTaskFromDatabase()
+        {
+            // Arrange
+
+            Task firstTask = new Task("Wash Dishes", 1, "1999-01-01");
+            firstTask.Save();
+            Task secondTask = new Task("Empty Dishwasher", 1, "2000-01-01");
+            secondTask.Save();
 
 
-        // [Fact]
-        // public void Test_Date_OrderBy()
-        // {
-        //     //Arrange
-        //     List<Task> newTasks = new List<Task>{};
-        //     Category newCategory = new Category("Kitchen");
-        //     newCategory.Save();
-        //
-        //     Task firstTask = new Task("Wash Dishes", newCategory.GetId(), "2000-01-01");
-        //     firstTask.Save();
-        //     Task secondTask = new Task("Empty Dishwasher", newCategory.GetId(), "1999-01-02");
-        //     secondTask.Save();
-        //
-        //     //Act
-        //     List<Task> byDate = Category.GetByDate();
-        //     List<Task> testList = new List<Task> {secondTask, firstTask};
-        //
-        //     //Assert
-        //     Assert.Equal(testList, byDate);
-        // }
-        //
+            // Act
+            List<Task> testTaskList = new List<Task> {secondTask};
+            firstTask.Delete();
+            List<Task> resultTaskList = Task.GetAll();
+
+            //Assert
+            Assert.Equal(testTaskList, resultTaskList);
+
+        }
 
         public void Dispose()
         {

@@ -3,6 +3,8 @@
   @foreach (var task in Model)
   {
     <li><a href='/tasks/@task.GetId()'>@task.GetDescription()</a></li>
+    <li>@task.GetDate()</li>
+
   }
 </ul>
 <a href='/tasks/new'>Add new task</a>

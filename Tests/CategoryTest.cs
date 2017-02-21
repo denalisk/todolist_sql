@@ -20,7 +20,7 @@ namespace ToDoList
             int result = Task.GetAll().Count;
 
             //Assert
-            Assert.Equal(result, 0);
+            Assert.Equal(0, result);
 
         }
 

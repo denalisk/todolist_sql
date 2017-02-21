@@ -2,7 +2,10 @@
 <ol>
   @foreach (var task in @Model["tasks"])
   {
-    <li>@task.GetName()</li>
+    <li>@task.GetName() Due by: @task.GetDate()</li>
+    <form action="/delete/task/@task.GetId()" method="post">
+      <button type="submit" class="btn btn-warning">Delete</button>
+    </form>
   }
 </ol>
 <p><a href="/categories/@Model["category"].GetId()/tasks/new">Add a new task</a></p>

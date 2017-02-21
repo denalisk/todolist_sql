@@ -1,7 +1,12 @@
 <h1>Add a new task to @Model["category"].GetDescription()</h1>
 <form action="/tasks" method="post">
-  <input type="hidden" name="category-id" value='@Model["category"].GetId()'>
-  <label for="task-description">Task Description</label>
-  <input type="text" id="task-description" name="task-description">
+    <input type="hidden" name="category-id" value='@Model["category"].GetId()'>
+    <label for="task-description">Task Description</label>
+    <input type="text" id="task-description" name="task-description">
+
+    <label for="date">Due Date</label>
+    <input type="date" name="date" max="9999-12-31">
+
+
   <button type="submit"> Add Task</button>
 </form>

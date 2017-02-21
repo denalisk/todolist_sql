@@ -40,16 +40,25 @@ namespace ToDoList
         model.Add("tasks", allTasks);
         return View["category_tasks_form.cshtml", model];
       };
+    //   Post["/delete/{objectName}/{objectId}"] = parameters => {
+    //       if (parameters.objectName == "category")
+    //       {
+    //
+    //       }
+    //   }
+
+
+
       Post["/tasks"] = _ => {
         Dictionary<string, object> model = new Dictionary<string, object>();
         Category selectedCategory = Category.Find(Request.Form["category-id"]);
-        List<Task> categoryTasks = selectedCategory.GetTasks();
         string taskDescription = Request.Form["task-description"];
         int newCategoryId = int.Parse(Request.Form["category-id"]);
-        string newDate = Request.Form["task-date"];
+        string newDate = Request.Form["date"];
         Task newTask = new Task(taskDescription, newCategoryId, newDate);
         newTask.Save();
-        categoryTasks.Add(newTask);
+        List<Task> categoryTasks = selectedCategory.GetTasks();
+        // categoryTasks.Add(newTask);
         model.Add("tasks", categoryTasks);
         model.Add("category", selectedCategory);
         return  View["category.cshtml", model];

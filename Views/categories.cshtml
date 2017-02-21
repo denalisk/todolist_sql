@@ -7,7 +7,9 @@
 @foreach (var category in Model)
 {
   <h3><a href="/categories/@category.GetId()">@category.GetDescription()</a></h3>
-
+  <form action="/delete/category/@category.GetId()" method="post">
+    <button type="submit" class="btn btn-warning">Delete</button>
+  </form>
 }
 
 <p><a href="/">Back Home</a></p>

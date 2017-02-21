@@ -78,7 +78,7 @@ namespace ToDoList
             Category newCategory = new Category("Kitchen");
             newCategory.Save();
 
-            Task firstTask = new Task("Wash Dishes", newCategory.GetId(), "2000-01-01");
+            Task firstTask = new Task("Wash Dishes", newCategory.GetId(), "1999-01-01");
             firstTask.Save();
             Task secondTask = new Task("Empty Dishwasher", newCategory.GetId(), "2000-01-01");
             secondTask.Save();

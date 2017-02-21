@@ -46,7 +46,8 @@ namespace ToDoList
         List<Task> categoryTasks = selectedCategory.GetTasks();
         string taskDescription = Request.Form["task-description"];
         int newCategoryId = int.Parse(Request.Form["category-id"]);
-        Task newTask = new Task(taskDescription, newCategoryId);
+        string newDate = Request.Form["task-date"];
+        Task newTask = new Task(taskDescription, newCategoryId, newDate);
         newTask.Save();
         categoryTasks.Add(newTask);
         model.Add("tasks", categoryTasks);

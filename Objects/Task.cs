@@ -9,12 +9,14 @@ namespace ToDoList.Objects //note namespace .Objects
         private int _id;
         private string _name;
         private int _category_id;
+        private string _date;
 
-        public Task(string newTask, int newCategoryId, int newId = 0)
+        public Task(string newTask, int newCategoryId, string newDate = "2000-01-01", int newId = 0)
         {
             _id = newId;
             _name = newTask;
             _category_id = newCategoryId;
+            _date = newDate;
         }
 
         public override bool Equals(System.Object otherTask)
@@ -53,7 +55,8 @@ namespace ToDoList.Objects //note namespace .Objects
                 int id = rdr.GetInt32(0);
                 string newTaskName = rdr.GetString(1);
                 int newCategoryId = rdr.GetInt32(2);
-                Task newTask = new Task(newTaskName, newCategoryId, id);
+                string newDate = rdr.GetString(3);
+                Task newTask = new Task(newTaskName, newCategoryId, newDate, id);
                 allTasks.Add(newTask);
             }
 
@@ -129,8 +132,9 @@ namespace ToDoList.Objects //note namespace .Objects
                 foundTaskId = rdr.GetInt32(0);
                 foundTaskName = rdr.GetString(1);
                 foundTaskCategoryId = rdr.GetInt32(2);
+                foundTaskDate = rdr.GetString(3);
             }
-            Task foundTask = new Task(foundTaskName, foundTaskCategoryId, foundTaskId);
+            Task foundTask = new Task(foundTaskName, foundTaskCategoryId, foundTaskDate, foundTaskId);
 
             if (rdr != null)
             {

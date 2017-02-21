@@ -110,7 +110,7 @@ namespace ToDoList.Objects
             connection.Open();
 
             //Command
-            SqlCommand cmd = new SqlCommand("SELECT * FROM categories WHERE id =@CategoryId;", connection);
+            SqlCommand cmd = new SqlCommand("SELECT * FROM categories WHERE id=@CategoryId;", connection);
 
             //Parameter
             SqlParameter idParameter = new SqlParameter();
@@ -139,6 +139,37 @@ namespace ToDoList.Objects
                 connection.Close();
             }
             return foundCategory;
+        }
+
+        public List<Task> GetTasks()
+        {
+            SqlConnection conn = DB.Connection();
+            conn.Open();
+
+            SqlCommand cmd = new SqlCommand("SELECT * FROM tasks WHERE category_id = @CategoryId;", conn);
+            SqlParameter categoryIdParameter = new SqlParameter();
+            categoryIdParameter.ParameterName = "@CategoryId";
+            categoryIdParameter.Value = this.GetId();
+            cmd.Parameters.Add(categoryIdParameter);
+            SqlDataReader rdr = cmd.ExecuteReader();
+            List<Task> tasks = new List<Task> {};
+            while (rdr.Read())
+            {
+                int taskId = rdr.GetInt32(0);
+                string taskDescription = rdr.GetString(1);
+                int taskCategoryId = rdr.GetInt32(2);
+                Task newTask = new Task(taskDescription, taskCategoryId, taskId);
+                tasks.Add(newTask);
+            }
+            if (rdr != null)
+            {
+                rdr.Close();
+            }
+            if (conn != null)
+            {
+                conn.Close();
+            }
+            return tasks;
         }
 
         public static void DeleteAll()

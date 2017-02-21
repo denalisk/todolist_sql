@@ -89,7 +89,6 @@ namespace ToDoList
 
             //Assert
             Assert.Equal(testTaskList, resultTaskList);
-
         }
 
 

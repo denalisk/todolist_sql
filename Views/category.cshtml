@@ -3,7 +3,7 @@
   @foreach (var task in @Model["tasks"])
   {
     <li>@task.GetName() Due by: @task.GetDate()</li>
-    <form action="/delete/task/@task.GetId()" method="post">
+    <form action="/delete/task/@Model["category"].GetId()/@task.GetId()" method="post">
       <button type="submit" class="btn btn-warning">Delete</button>
     </form>
   }

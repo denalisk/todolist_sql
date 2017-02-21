@@ -30,7 +30,7 @@ namespace ToDoList
         var categoryTasks = selectedCategory.GetTasks();
         model.Add("category", selectedCategory);
         model.Add("tasks", categoryTasks);
-        return View["/category.cshtml", model];
+        return View["category.cshtml", model];
       };
       Get["/categories/{id}/tasks/new"] = parameters => {
         Dictionary<string, object> model = new Dictionary<string, object>();
@@ -40,12 +40,16 @@ namespace ToDoList
         model.Add("tasks", allTasks);
         return View["category_tasks_form.cshtml", model];
       };
-    //   Post["/delete/{objectName}/{objectId}"] = parameters => {
-    //       if (parameters.objectName == "category")
-    //       {
-    //
-    //       }
-    //   }
+      Post["/delete/task/{categoryId}/{taskId}"] = parameters => {
+          Task targetTask = Task.Find(parameters.taskId);
+          targetTask.Delete();
+          Dictionary<string, object> model = new Dictionary<string, object>();
+          var selectedCategory = Category.Find(parameters.categoryId);
+          var categoryTasks = selectedCategory.GetTasks();
+          model.Add("category", selectedCategory);
+          model.Add("tasks", categoryTasks);
+          return View["category.cshtml", model];
+      };
 
 
 

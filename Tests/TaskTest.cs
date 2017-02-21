@@ -5,44 +5,76 @@ using System.Collections.Generic;
 
 namespace ToDoList
 {
-  public class TaskTest : IDisposable
-  {
-    [Fact]
-    public void Test1_GetDescription_ReturnsDescription()
+    public class ToDoTest : IDisposable
     {
-      //Arrange
-      string description01 = "walk the dog";
-       Task checkIf = new Task(description01);
+        public ToDoTest()
+        {
+            DBConfiguration.ConnectionString = "Data Source=(localdb)\\mssqllocaldb;Initial Catalog=todo_test;Integrated Security=SSPI;";
+        }
 
-      //Act
-      string result = checkIf.GetDescription();
+        [Fact]
+        public void Test_CategoryDatabaseFirstEmpty()
+        {
 
-      //Assert
-      Assert.Equal(description01, result);
+            //Arrange
+            int result = Task.GetAll().Count;
+
+            //Assert
+            Assert.Equal(result, 0);
+
+        }
+
+        [Fact]
+        public void Test_Save_SaveCategoryToDatabase()
+        {
+            // Arrange
+                Category newCategory = new Category("Lawn Chores");
+
+            // Act
+                newCategory.Save();
+                List<Category> allCategories = Category.GetAll();
+                List<Category> testList = new List<Category>{newCategory};
+
+            // Assert
+                Assert.Equal(testList, allCategories);
+
+        }
+
+        [Fact]
+        public void Test_Save_AssignsIdToCategory()
+        {
+            // Arrange
+            Category newCategory = new Category("Chores");
+
+            // Act
+            newCategory.Save();
+            Category savedCategory = Category.GetAll()[0];
+
+            int resultId = savedCategory.GetId();
+            int testId = newCategory.GetId();
+
+            // Assert
+            Assert.Equal(testId, resultId);
+        }
+
+        [Fact]
+        public void Test_Find_FindTaskInDatabase()
+        {
+            //Arrange
+            Category newCategory = new Category("Chores");
+            newCategory.Save();
+
+            //Act
+            Category foundCategory = Category.Find(newCategory.GetId());
+
+            //Assert
+            Assert.Equal(newCategory, foundCategory);
+        }
+
+
+        public void Dispose()
+        {
+            Category.DeleteAll();
+        }
     }
-    [Fact]
-    public void Test2_GetAll_ReturnsAllTasks()
-    {
-      //Arrange
-      string description01 = "walk the dog";
-      string description02 = "wash dishes";
-      Task taskInstance01 = new Task(description01);
-      Task taskInstance02 = new Task(description02);
-      List<Task> checkIfTaskList = new List<Task> {taskInstance01, taskInstance02};
-
-      //Act
-      List<Task> result = Task.GetAll();
-
-      foreach (Task currently in result)
-      {
-        Console.WriteLine("Output: " + currently.GetDescription());
-      }
-      //Assert
-      Assert.Equal(checkIfTaskList, result);
-    }
-    public void Dispose()
-    {
-      Task.DeleteAll();
-    }
-  }
 }

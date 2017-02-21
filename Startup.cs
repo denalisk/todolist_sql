@@ -7,34 +7,38 @@ using Nancy.ViewEngines.Razor;
 
 namespace ToDoList
 {
-  public class Startup
-  {
-    public void Configure(IApplicationBuilder app)
+    public class Startup
     {
-      app.UseOwin(x => x.UseNancy());
+        public void Configure(IApplicationBuilder app)
+        {
+            app.UseOwin(x => x.UseNancy());
+        }
     }
-  }
-  public class CustomRootPathProvider : IRootPathProvider
-  {
-    public string GetRootPath()
+    public class CustomRootPathProvider : IRootPathProvider
     {
-      return Directory.GetCurrentDirectory();
+        public string GetRootPath()
+        {
+            return Directory.GetCurrentDirectory();
+        }
     }
-  }
-  public class RazorConfig : IRazorConfiguration
-  {
-    public IEnumerable<string> GetAssemblyNames()
+    public class RazorConfig : IRazorConfiguration
     {
-      return null;
-    }
-    public IEnumerable<string> GetDefaultNamespaces()
-    {
-      return null;
-    }
+        public IEnumerable<string> GetAssemblyNames()
+        {
+            return null;
+        }
+        public IEnumerable<string> GetDefaultNamespaces()
+        {
+            return null;
+        }
 
-    public bool AutoIncludeModelNamespace
-    {
-      get { return false; }
+        public bool AutoIncludeModelNamespace
+        {
+            get { return false; }
+        }
     }
-  }
+    public static class DBConfiguration
+    {
+        public static string ConnectionString = "Data Source=(localdb)\\mssqllocaldb;Initial Catalog=todo;Integrated Security=SSPI;";
+    }
 }

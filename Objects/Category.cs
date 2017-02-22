@@ -173,6 +173,30 @@ namespace ToDoList.Objects
             return tasks;
         }
 
+        public void Delete()
+        {
+            SqlConnection connection = DB.Connection();
+            connection.Open();
+
+            List<Task> targetTasks = this.GetTasks();
+            foreach(Task entry in targetTasks)
+            {
+                entry.Delete();
+            }
+            SqlCommand cmd = new SqlCommand("DELETE FROM categories WHERE id=@CategoryId;", connection);
+
+            SqlParameter idParameter = new SqlParameter();
+            idParameter.ParameterName = "@CategoryId";
+            idParameter.Value = this.GetId();
+            cmd.Parameters.Add(idParameter);
+            cmd.ExecuteNonQuery();
+
+            if (connection != null)
+            {
+                connection.Close();
+            }
+        }
+
         public static void DeleteAll()
         {
             SqlConnection connection = DB.Connection();

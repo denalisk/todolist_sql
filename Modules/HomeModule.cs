@@ -51,6 +51,13 @@ namespace ToDoList
           return View["category.cshtml", model];
       };
 
+      Post["/delete/category/{categoryId}"] = parameters => {
+          Category targetCategory = Category.Find(parameters.categoryId);
+          targetCategory.Delete();
+          List<Category> allCategories = Category.GetAll();
+          return View["categories.cshtml", allCategories];
+      };
+
 
 
       Post["/tasks"] = _ => {

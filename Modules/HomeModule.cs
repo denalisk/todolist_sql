@@ -8,9 +8,74 @@ namespace ToDoList
   {
     public HomeModule()
     {
-      // Get["/"] = _ => {
-      //   return View["index.cshtml"];
-      // };
+      Get["/"] = _ => {
+        return View["index.cshtml"];
+      };
+      Get["/tasks"] = _ => {
+        List<Task> AllTasks = Task.GetAll();
+        return View["tasks.cshtml", AllTasks];
+      };
+      Get["/categories"] = _ => {
+        List<Category> AllCategories = Category.GetAll();
+        return View["categories.cshtml", AllCategories];
+      };
+
+      //Create a new task
+      Get["/tasks/new"] = _ => {
+        return View["tasks_form.cshtml"];
+      };
+      Post["/tasks/new"] = _ => {
+        Task newTask = new Task(Request.Form["task-description"], Request.Form["date"]);
+        newTask.Save();
+        return View["index.cshtml"];
+      };
+
+      //Create a new category
+      Get["/categories/new"] = _ => {
+        return View["categories_form.cshtml"];
+      };
+      Post["/categories/new"] = _ => {
+        Category newCategory = new Category(Request.Form["category-name"]);
+        newCategory.Save();
+        return View["index.cshtml"];
+      };
+
+      Get["tasks/{id}"] = parameters =>
+      {
+          Dictionary<string, object> passedModel = new Dictionary<string, object>() {};
+          Task targetTask = Task.Find(parameters.id);
+          List<Category> taskCategories = targetTask.GetCategories();
+          List<Category> allCategories = Category.GetAll();
+          passedModel.Add("task", targetTask);
+          passedModel.Add("taskCategories", taskCategories);
+          passedModel.Add("allCategories", allCategories);
+          return View["task.cshtml", passedModel];
+      };
+
+      Get["categories/{id}"] = parameters =>
+      {
+          Dictionary<string, object> passedModel = new Dictionary<string, object>() {};
+          Category targetCategory = Category.Find(parameters.id);
+          List<Task> categoryTasks = targetCategory.GetTasks();
+          List<Task> allTasks = Task.GetAll();
+          passedModel.Add("category", targetCategory);
+          passedModel.Add("categoryTasks", categoryTasks);
+          passedModel.Add("allTasks", allTasks);
+          return View["category.cshtml", passedModel];
+      };
+
+      Post["task/add_category"] = _ => {
+        Category category = Category.Find(Request.Form["category-id"]);
+        Task task = Task.Find(Request.Form["task-id"]);
+        task.AddCategory(category);
+        return View["index.cshtml"];
+      };
+      Post["category/add_task"] = _ => {
+        Category category = Category.Find(Request.Form["category-id"]);
+        Task task = Task.Find(Request.Form["task-id"]);
+        category.AddTask(task);
+        return View["index.cshtml"];
+      };
       //
       // Get["/categories"] = _ => {
       //   var allCategories = Category.GetAll();

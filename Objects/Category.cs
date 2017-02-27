@@ -192,56 +192,26 @@ namespace ToDoList.Objects
 
         public List<Task> GetTasks()
         {
+            List<Task> tasks = new List<Task> {};
             SqlConnection conn = DB.Connection();
             conn.Open();
 
-            SqlCommand cmd = new SqlCommand("SELECT task_id FROM categories_tasks WHERE category_id = @CategoryId;", conn);
-            SqlParameter categoryIdParameter = new SqlParameter();
-            categoryIdParameter.ParameterName = "@CategoryId";
-            categoryIdParameter.Value = this.GetId();
-            cmd.Parameters.Add(categoryIdParameter);
+            SqlCommand cmd = new SqlCommand("SELECT tasks.* FROM categories JOIN categories_tasks ON (categories.id = categories_tasks.category_id) JOIN tasks ON (categories_tasks.task_id = tasks.id) WHERE @CategoryId = categories.id;", conn);
 
+            cmd.Parameters.Add(new SqlParameter("@CategoryId", this.GetId()));
             SqlDataReader rdr = cmd.ExecuteReader();
 
-            List<int> taskIds = new List<int> {};
             while(rdr.Read())
             {
-                int taskId = rdr.GetInt32(0);
-                taskIds.Add(taskId);
-            }
-            if (rdr != null)
-            {
-                rdr.Close();
+                int id = rdr.GetInt32(0);
+                string newTaskName = rdr.GetString(1);
+                string newDate = rdr.GetString(2);
+                bool status = rdr.GetBoolean(3);
+                Task newTask = new Task(newTaskName, newDate, id, status);
+                tasks.Add(newTask);
             }
 
-            List<Task> tasks = new List<Task> {};
-            foreach (int taskId in taskIds)
-            {
-                SqlCommand taskQuery = new SqlCommand("SELECT * FROM tasks WHERE id = @TaskId;", conn);
-
-                SqlParameter taskIdParameter = new SqlParameter();
-                taskIdParameter.ParameterName = "@TaskId";
-                taskIdParameter.Value = taskId;
-                taskQuery.Parameters.Add(taskIdParameter);
-
-                SqlDataReader queryReader = taskQuery.ExecuteReader();
-                while(queryReader.Read())
-                {
-                    int thisTaskId = queryReader.GetInt32(0);
-                    string taskDescription = queryReader.GetString(1);
-                    string taskDate = queryReader.GetString(2);
-                    Task foundTask = new Task(taskDescription, taskDate, thisTaskId);
-                    tasks.Add(foundTask);
-                }
-                if (queryReader != null)
-                {
-                    queryReader.Close();
-                }
-            }
-            if (conn != null)
-            {
-                conn.Close();
-            }
+            DB.CloseSqlConnection(rdr, conn);
             return tasks;
         }
 

@@ -159,7 +159,7 @@ namespace ToDoList.Objects
                 string taskDescription = rdr.GetString(1);
                 int taskCategoryId = rdr.GetInt32(2);
                 string newDate = rdr.GetString(3);
-                Task newTask = new Task(taskDescription, taskCategoryId, newDate, taskId);
+                Task newTask = new Task(taskDescription, newDate, taskId);
                 tasks.Add(newTask);
             }
             if (rdr != null)

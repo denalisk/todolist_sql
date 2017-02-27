@@ -256,6 +256,25 @@ namespace ToDoList.Objects //note namespace .Objects
             return allTasks;
         }
 
+        public void Update(string newTaskName, string newTaskDate)
+        {
+            SqlConnection conn = DB.Connection();
+            conn.Open();
+
+            SqlCommand cmd = new SqlCommand("UPDATE tasks SET name=@TaskName, date=@TaskDate WHERE id=@TaskId", conn);
+            cmd.Parameters.Add(new SqlParameter("@TaskId", this.GetId()));
+            cmd.Parameters.Add(new SqlParameter("@TaskName", newTaskName));
+            cmd.Parameters.Add(new SqlParameter("@TaskDate", newTaskDate));
+
+            cmd.ExecuteNonQuery();
+            if (conn != null)
+            {
+                conn.Close();
+            }
+            this.SetName(newTaskName);
+            this.SetDate(newTaskDate);
+        }
+
         public static void DeleteAll()
         {
             SqlConnection connection = DB.Connection();
@@ -278,6 +297,10 @@ namespace ToDoList.Objects //note namespace .Objects
         public int GetId()
         {
             return _id;
+        }
+        public void SetId(int newId)
+        {
+            _id = newId;
         }
 
         public string GetDate()

@@ -269,6 +269,27 @@ namespace ToDoList
             Assert.Equal(1, Task.GetComplete(false).Count);
         }
 
+        [Fact]
+        public void Task_Update_ReturnUpdatedTask()
+        {
+            //Arrange
+            Task testTask = new Task("Mow the lawn", "1999-01-01");
+            testTask.Save();
+            Task testTask2  = new Task("Bridge the Gap", "2000-01-01");
+            testTask2.Save();
+            string newTaskName = "Bridge the Gap";
+            string newTaskDate = "2000-01-01";
+
+            //Act
+            testTask.Update(newTaskName, newTaskDate);
+            testTask.SetId(0);
+            testTask2.SetId(0);
+
+            //Assert
+            Assert.Equal(testTask2, testTask);
+
+        }
+
         public void Dispose()
         {
             Task.DeleteAll();

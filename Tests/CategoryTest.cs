@@ -290,6 +290,24 @@ namespace ToDoList
 
         }
 
+        [Fact]
+        public void Category_Update_ReturnUpdatedCategory()
+        {
+            //Arrange
+            Category testCategory = new Category("Home stuff");
+            testCategory.Save();
+            Category testCategory2 = new Category("School stuff");
+            testCategory2.Save();
+
+            //Act
+            testCategory.Update("School stuff");
+            testCategory.SetId(0);
+            testCategory2.SetId(0);
+
+            //Assert
+            Assert.Equal(testCategory2, testCategory);
+        }
+
         public void Dispose()
         {
             Task.DeleteAll();

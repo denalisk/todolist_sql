@@ -46,6 +46,16 @@ namespace ToDoList.Objects
             return _id;
         }
 
+        public void SetId(int newId)
+        {
+            _id = newId;
+        }
+
+        public void SetName(string newDescription)
+        {
+            _description = newDescription;
+        }
+
         public static List<Category> GetAll()
         {
             List<Category> allCategories = new List<Category>{};
@@ -213,6 +223,23 @@ namespace ToDoList.Objects
 
             DB.CloseSqlConnection(rdr, conn);
             return tasks;
+        }
+
+        public void Update(string newCategory)
+        {
+            SqlConnection conn = DB.Connection();
+            conn.Open();
+
+            SqlCommand cmd = new SqlCommand("UPDATE categories SET description=@CategoryName WHERE id=@CategoryId", conn);
+            cmd.Parameters.Add(new SqlParameter("@CategoryId", this.GetId()));
+            cmd.Parameters.Add(new SqlParameter("@CategoryName", newCategory));
+            cmd.ExecuteNonQuery();
+
+            if (cmd != null)
+            {
+                conn.Close();
+            }
+            this.SetName(newCategory);
         }
 
         public void Delete()

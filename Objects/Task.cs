@@ -31,7 +31,8 @@ namespace ToDoList.Objects //note namespace .Objects
                 bool nameEquality = this.GetName() == newTask.GetName();
                 bool idEquality = this.GetId() == newTask.GetId();
                 bool dateEquality= this.GetDate() == newTask.GetDate();
-                return (nameEquality && idEquality && dateEquality);
+                bool completeStatusEquality = this.GetIsComplete() == newTask.GetIsComplete();
+                return (nameEquality && idEquality && dateEquality && completeStatusEquality);
             }
         }
 
@@ -174,53 +175,25 @@ namespace ToDoList.Objects //note namespace .Objects
 
         public List<Category> GetCategories()
         {
-            List<int> categoryIds = new List<int> {};
             List<Category> thisTaskCategories = new List<Category> {};
 
             SqlConnection conn = DB.Connection();
             conn.Open();
 
-            SqlCommand cmd = new SqlCommand("SELECT category_id FROM categories_tasks WHERE task_id = @TaskId;", conn);
+            SqlCommand cmd = new SqlCommand("SELECT categories.* FROM categories JOIN categories_tasks ON (categories.id = categories_tasks.category_id) JOIN tasks ON (categories_tasks.task_id = tasks.id) WHERE tasks.id = @TaskId;", conn);
             cmd.Parameters.Add(new SqlParameter("@TaskId", this.GetId()));
 
             SqlDataReader rdr = cmd.ExecuteReader();
 
             while (rdr.Read())
             {
-                int foundId = rdr.GetInt32(0);
-                categoryIds.Add(foundId);
+                int newId = rdr.GetInt32(0);
+                string newDescription = rdr.GetString(1);
+                Category newCategory = new Category(newDescription, newId);
+                thisTaskCategories.Add(newCategory);
             }
 
-            if (rdr != null)
-            {
-                rdr.Close();
-            }
-
-            foreach(int entry in categoryIds)
-            {
-                SqlCommand cmd2 = new SqlCommand("SELECT * FROM categories WHERE id=@CategoryId;", conn);
-                cmd2.Parameters.Add(new SqlParameter("@CategoryId", entry));
-
-                SqlDataReader rdr2 = cmd2.ExecuteReader();
-
-                while (rdr2.Read())
-                {
-                    int newId = rdr2.GetInt32(0);
-                    string newDescription = rdr2.GetString(1);
-                    Category newCategory = new Category(newDescription, newId);
-                    thisTaskCategories.Add(newCategory);
-                }
-
-                if (rdr2 != null)
-                {
-                    rdr2.Close();
-                }
-            }
-
-            if (conn != null)
-            {
-                conn.Close();
-            }
+            DB.CloseSqlConnection(rdr, conn);
             return thisTaskCategories;
         }
 

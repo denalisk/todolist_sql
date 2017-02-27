@@ -262,10 +262,11 @@ namespace ToDoList
 
             //Act
             testTask.ToggleComplete();
+            testTask.ToggleComplete();
             testTask2.ToggleComplete();
 
             //Assert
-            Assert.Equal(2, Task.GetComplete(true).Count);
+            Assert.Equal(1, Task.GetComplete(false).Count);
         }
 
         public void Dispose()

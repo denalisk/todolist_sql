@@ -144,6 +144,83 @@ namespace ToDoList.Objects //note namespace .Objects
             return foundTask;
         }
 
+        public void AddCategory(Category newCategory)
+        {
+          SqlConnection conn = DB.Connection();
+          conn.Open();
+
+          SqlCommand cmd = new SqlCommand("INSERT INTO categories_tasks (category_id, task_id) VALUES (@CategoryId, @TaskId);", conn);
+
+          SqlParameter categoryIdParameter = new SqlParameter();
+          categoryIdParameter.ParameterName = "@CategoryId";
+          categoryIdParameter.Value = newCategory.GetId();
+          cmd.Parameters.Add(categoryIdParameter);
+
+          SqlParameter taskIdParameter = new SqlParameter();
+          taskIdParameter.ParameterName = "@TaskId";
+          taskIdParameter.Value = this.GetId();
+          cmd.Parameters.Add(taskIdParameter);
+
+          cmd.ExecuteNonQuery();
+
+          if (conn != null)
+          {
+            conn.Close();
+          }
+        }
+
+        public List<Category> GetCategories()
+        {
+            List<int> categoryIds = new List<int> {};
+            List<Category> thisTaskCategories = new List<Category> {};
+
+            SqlConnection conn = DB.Connection();
+            conn.Open();
+
+            SqlCommand cmd = new SqlCommand("SELECT category_id FROM categories_tasks WHERE task_id = @TaskId;", conn);
+            cmd.Parameters.Add(new SqlParameter("@TaskId", this.GetId()));
+
+            SqlDataReader rdr = cmd.ExecuteReader();
+
+            while (rdr.Read())
+            {
+                int foundId = rdr.GetInt32(0);
+                categoryIds.Add(foundId);
+            }
+
+            if (rdr != null)
+            {
+                rdr.Close();
+            }
+
+            foreach(int entry in categoryIds)
+            {
+                SqlCommand cmd2 = new SqlCommand("SELECT * FROM categories WHERE id=@CategoryId;", conn);
+                cmd2.Parameters.Add(new SqlParameter("@CategoryId", entry));
+
+                SqlDataReader rdr2 = cmd2.ExecuteReader();
+
+                while (rdr2.Read())
+                {
+                    int newId = rdr2.GetInt32(0);
+                    string newDescription = rdr2.GetString(1);
+                    Category newCategory = new Category(newDescription, newId);
+                    thisTaskCategories.Add(newCategory);
+                }
+
+                if (rdr2 != null)
+                {
+                    rdr2.Close();
+                }
+            }
+
+            if (conn != null)
+            {
+                conn.Close();
+            }
+            return thisTaskCategories;
+        }
+
         public void Delete()
         {
             SqlConnection connection = DB.Connection();

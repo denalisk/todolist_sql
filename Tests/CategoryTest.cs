@@ -195,6 +195,26 @@ namespace ToDoList
 
         }
 
+        [Fact]
+        public void Test_AddCategory_AddsCategoryToTask()
+        {
+          //Arrange
+          Task testTask = new Task("Mow the lawn", "1999-01-01");
+          testTask.Save();
+
+          Category testCategory = new Category("Home stuff");
+          testCategory.Save();
+
+          //Act
+          testTask.AddCategory(testCategory);
+
+          List<Category> result = testTask.GetCategories();
+          List<Category> testList = new List<Category>{testCategory};
+
+          //Assert
+          Assert.Equal(testList, result);
+        }
+
         public void Dispose()
         {
             Task.DeleteAll();

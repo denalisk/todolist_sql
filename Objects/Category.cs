@@ -250,12 +250,7 @@ namespace ToDoList.Objects
             SqlConnection connection = DB.Connection();
             connection.Open();
 
-            // List<Task> targetTasks = this.GetTasks();
-            // foreach(Task entry in targetTasks)
-            // {
-            //     entry.Delete();
-            // }
-            SqlCommand cmd = new SqlCommand("DELETE FROM categories WHERE id=@CategoryId;", connection);
+            SqlCommand cmd = new SqlCommand("DELETE FROM categories WHERE id=@CategoryId; DELETE FROM categories_tasks WHERE category_id=@CategoryId;", connection);
 
             SqlParameter idParameter = new SqlParameter();
             idParameter.ParameterName = "@CategoryId";

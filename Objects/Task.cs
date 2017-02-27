@@ -226,7 +226,7 @@ namespace ToDoList.Objects //note namespace .Objects
             SqlConnection connection = DB.Connection();
             connection.Open();
 
-            SqlCommand cmd = new SqlCommand("DELETE FROM tasks WHERE id=@TaskId", connection);
+            SqlCommand cmd = new SqlCommand("DELETE FROM tasks WHERE id=@TaskId; DELETE FROM categories_tasks WHERE task_id=@TaskId;", connection);
 
             SqlParameter idParameter = new SqlParameter();
             idParameter.ParameterName = "@TaskId";

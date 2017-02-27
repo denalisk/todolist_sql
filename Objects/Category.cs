@@ -173,6 +173,23 @@ namespace ToDoList.Objects
         //     return tasks;
         // }
 
+        public void AddTask(Task newTask)
+        {
+          SqlConnection conn = DB.Connection();
+          conn.Open();
+
+          SqlCommand cmd = new SqlCommand("INSERT INTO categories_tasks (category_id, task_id) VALUES (@CategoryId, @TaskId);", conn);
+          cmd.Parameters.Add(new SqlParameter("@CategoryId", this.GetId()));
+          cmd.Parameters.Add(new SqlParameter("@TaskId", newTask.GetId()));
+
+          cmd.ExecuteNonQuery();
+
+          if (conn != null)
+          {
+            conn.Close();
+          }
+        }
+
         public void Delete()
         {
             SqlConnection connection = DB.Connection();

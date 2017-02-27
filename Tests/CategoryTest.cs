@@ -171,6 +171,30 @@ namespace ToDoList
 
         }
 
+        // BEGIN NEW TESTS =============================================================
+        [Fact]
+        public void Categories_AddTask_AssociateTaskWithCategory()
+        {
+          // Arrange
+          Category newCategory = new Category("Chores");
+          newCategory.Save();
+          Task firstTask = new Task("Wash Dishes", "1999-01-01");
+          firstTask.Save();
+          Task secondTask = new Task("Empty Dishwasher", "2000-01-01");
+          secondTask.Save();
+
+          // Act
+           newCategory.AddTask(firstTask);
+           newCategory.AddTask(secondTask);
+
+           List<Task> result = newCategory.GetTasks();
+           List<Task> testList = new List<Task>{firstTask, secondTask};
+
+          // Assert
+          Assert.Equal(testList, result);
+
+        }
+
         public void Dispose()
         {
             Task.DeleteAll();

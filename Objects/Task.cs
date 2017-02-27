@@ -9,12 +9,14 @@ namespace ToDoList.Objects //note namespace .Objects
         private int _id;
         private string _name;
         private string _date;
+        private bool _isComplete;
 
-        public Task(string newTask, string newDate, int newId = 0)
+        public Task(string newTask, string newDate, int newId = 0, bool isComplete = false)
         {
             _id = newId;
             _name = newTask;
             _date = newDate;
+            _isComplete = isComplete;
         }
 
         public override bool Equals(System.Object otherTask)
@@ -53,7 +55,8 @@ namespace ToDoList.Objects //note namespace .Objects
                 int id = rdr.GetInt32(0);
                 string newTaskName = rdr.GetString(1);
                 string newDate = rdr.GetString(2);
-                Task newTask = new Task(newTaskName, newDate, id);
+                bool status = rdr.GetBoolean(3);
+                Task newTask = new Task(newTaskName, newDate, id, status);
                 allTasks.Add(newTask);
             }
 
@@ -240,6 +243,46 @@ namespace ToDoList.Objects //note namespace .Objects
             }
         }
 
+        public void ToggleComplete()
+        {
+            SqlConnection conn = DB.Connection();
+            conn.Open();
+
+            SqlCommand cmd = new SqlCommand("UPDATE tasks SET is_complete=@CompleteValue OUTPUT INSERTED.is_complete WHERE id=@TaskId;", conn);
+            cmd.Parameters.Add(new SqlParameter("@TaskId", this.GetId()));
+            cmd.Parameters.Add(new SqlParameter("@CompleteValue", (this.GetIsComplete() != true)));
+            SqlDataReader rdr = cmd.ExecuteReader();
+
+            while(rdr.Read())
+            {
+                this.SetIsComplete(rdr.GetBoolean(0));
+            }
+
+            DB.CloseSqlConnection(rdr, conn);
+        }
+
+        public static List<Task> GetComplete(bool status)
+        {
+            SqlConnection conn = DB.Connection();
+            conn.Open();
+
+            SqlCommand cmd = new SqlCommand("SELECT * FROM tasks WHERE is_complete=@CompleteStatus;", conn);
+            cmd.Parameters.Add(new SqlParameter("@CompleteStatus", status));
+            SqlDataReader rdr = cmd.ExecuteReader();
+            List<Task> allTasks = new List<Task>{};
+            while(rdr.Read())
+            {
+                int id = rdr.GetInt32(0);
+                string newTaskName = rdr.GetString(1);
+                string newDate = rdr.GetString(2);
+                bool completeStatus = rdr.GetBoolean(3);
+                Task newTask = new Task(newTaskName, newDate, id, completeStatus);
+                allTasks.Add(newTask);
+            }
+            DB.CloseSqlConnection(rdr, conn);
+            return allTasks;
+        }
+
         public static void DeleteAll()
         {
             SqlConnection connection = DB.Connection();
@@ -271,6 +314,15 @@ namespace ToDoList.Objects //note namespace .Objects
         public void SetDate(string newDate)
         {
             _date = newDate;
+        }
+
+        public bool GetIsComplete()
+        {
+            return _isComplete;
+        }
+        public void SetIsComplete(bool status)
+        {
+            _isComplete = status;
         }
     }
 }

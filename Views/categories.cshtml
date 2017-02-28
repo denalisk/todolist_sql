@@ -7,8 +7,15 @@
 @foreach (var category in Model)
 {
   <h3><a href="/categories/@category.GetId()">@category.GetDescription()</a></h3>
-  <form action="/delete/category/@category.GetId()" method="post">
-    <button type="submit" class="btn btn-warning">Delete</button>
+  <form action="/categories/@category.GetId()" method="post">
+        <input type="hidden" name="_method" value="DELETE">
+        <button type="submit" class="btn btn-warning">Delete</button>
+  </form>
+  <button type="button" name="edit-button" class="edit-button">Edit</button>
+  <form class="appears" action="/categories/@category.GetId()" method="post">
+        <input type="hidden" name="_method" value="PATCH">
+        <input type="text" name="new-category-name" placeholder="New name">
+        <button type="submit" class="btn btn-warning">Update</button>
   </form>
 }
 <h4><a href="/categories/new">Add a new category</a></h4>

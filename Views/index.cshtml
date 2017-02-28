@@ -1,3 +1,43 @@
 <h1>To Do List</h1>
 <a href='/categories'>View categories</a>
+<a href='/tasks'>View tasks</a>
 <a href="/categories/new">Add a new category</a>
+<a href="/tasks/new">Add a new task</a>
+
+<div class="col s6">
+    <h2>Current Categories</h2>
+    @foreach (var category in @Model["categories"])
+    {
+      <h3><a href="/categories/@category.GetId()">@category.GetDescription()</a></h3>
+      <form action="/categories/@category.GetId()" method="post">
+            <input type="hidden" name="_method" value="DELETE">
+            <button type="submit" class="btn btn-warning">Delete</button>
+      </form>
+      <button type="button" name="edit-button" class="edit-button">Edit</button>
+      <form class="appears" action="/categories/@category.GetId()" method="post">
+            <input type="hidden" name="_method" value="PATCH">
+            <input type="text" name="new-category-name" placeholder="New name">
+            <button type="submit" class="btn btn-warning">Update</button>
+      </form>
+    }
+</div>
+<div class="col s6">
+    <h2>Current Tasks</h2>
+    @foreach (var task in @Model["tasks"])
+    {
+      <li>@task.GetName() Due by: @task.GetDate()</li>
+      <form action="/tasks/@task.GetId()" method="post">
+          <input type="hidden" name="_method" value="DELETE">
+          <button type="submit" class="btn btn-warning">Delete</button>
+      </form>
+      <button type="button" name="edit-button" class="edit-button">Edit</button>
+      <form class="appears" action="/tasks/@task.GetId()" method="post">
+            <input type="hidden" name="_method" value="PATCH">
+            <label for="new-task-name">New Name: </label>
+            <input type="text" name="new-task-name" value="@task.GetName()">
+            <label for="new-task-date">New Date: </label>
+            <input type="date" name="new-task-date" value="@task.GetDate()">
+            <button type="submit" class="btn btn-warning">Update</button>
+      </form>
+    }
+</div>

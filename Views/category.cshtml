@@ -3,12 +3,21 @@
   @foreach (var task in @Model["categoryTasks"])
   {
     <li>@task.GetName() Due by: @task.GetDate()</li>
-    <form action="/delete/task/@Model["category"].GetId()/@task.GetId()" method="post">
-      <button type="submit" class="btn btn-warning">Delete</button>
+    <form action="/tasks/@task.GetId()" method="post">
+        <input type="hidden" name="_method" value="DELETE">
+        <button type="submit" class="btn btn-warning">Delete</button>
+    </form>
+    <button type="button" name="edit-button" class="edit-button">Edit</button>
+    <form class="appears" action="/tasks/@task.GetId()" method="post">
+          <input type="hidden" name="_method" value="PATCH">
+          <label for="new-task-name">New Name: </label>
+          <input type="text" name="new-task-name" value="@task.GetName()">
+          <label for="new-task-date">New Date: </label>
+          <input type="date" name="new-task-date" value="@task.GetDate()">
+          <button type="submit" class="btn btn-warning">Update</button>
     </form>
   }
 </ol>
-
 <hr />
 
 <h4>Add a task to this category: </h4>
